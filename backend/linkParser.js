@@ -1,3 +1,10 @@
+let links = [];
+let config;
+
+function setConfig(_config = {}) {
+    config = _config;
+}
+
 function findBody(content) {
     return getHTMLContent(content).body;
 }
@@ -5,10 +12,10 @@ function findBody(content) {
 function findLinks(content) {
     let html = getHTMLContent(content);
     getLinksFromBody(html.body);
+    return links;
 }
 
 function getHTMLContent(html) {
-
     let contentReg = /<head>([\s\S]*)<\/head>([\s\n]*)<body[^>]*>([\s\S]*)<\/body>/i;
     let matchResult = html.match(contentReg);
     return {
@@ -34,7 +41,10 @@ function getLinksFromBody(body) {
         if (body.indexOf('</a>') === 0) {
             return STATUS.RIGHT;
         }
-        return STATUS.CONTENT;
+        if (currentStatus === STATUS.LEFT) {
+            return STATUS.CONTENT;
+        }
+        return STATUS.INIT;
     }
 
     while (body) {
@@ -42,11 +52,15 @@ function getLinksFromBody(body) {
         switch (currentStatus) {
             case STATUS.INIT:
                 result = body.match(/([\s\S]*?)<a [^>]*?>/);
-                let uselessContent = result[1];
-                console.info(uselessContent);
+
+                let uselessContent;
+                if (!result) {
+                    uselessContent = body;
+                } else {
+                    uselessContent = result[1];
+                }
                 body = body.slice(uselessContent.length);
                 currentStatus = STATUS.LEFT;
-                console.info('init end');
                 break;
             case STATUS.LEFT:
                 result = body.match(/(<a [^>]*?>)[\s\S]*/);
@@ -54,14 +68,12 @@ function getLinksFromBody(body) {
                     throw new Error('parse error: should find <a >');
                 }
                 left = result[1];
-                console.info(left);
                 body = body.slice(left.length);
                 stack.unshift({
                     type: 'left',
                     value: left
                 });
                 currentStatus = getStatus(body);
-                console.info('left end');
                 break;
             case STATUS.CONTENT:
                 result = body.match(/([\s\S]+?)((<a )|(<\/a>))/);
@@ -73,6 +85,7 @@ function getLinksFromBody(body) {
                 content = result[1];
                 if (!content) {
                     console.info(result);
+                    throw new Error('Should find conent');
                 }
                 body = body.slice(content.length);
                 stack.unshift({
@@ -80,7 +93,6 @@ function getLinksFromBody(body) {
                     value: content
                 });
                 currentStatus = getStatus(body);
-                console.info('content end');
                 break;
             case STATUS.RIGHT:
                 content = stack.shift();
@@ -89,23 +101,38 @@ function getLinksFromBody(body) {
                     throw new Error('Stack is empty');
                 }
                 let linkHTML = `${left.value}${content.value}</a>`;
-                let link = getLink(linkHTML);
-                console.info(link);
+                saveLink(linkHTML);
                 body = body.slice('</a>'.length);
-                console.info('right end');
+                currentStatus = getStatus(body);
                 break;
             default: throw new Error('Invalid status:' + currentStatus);
         }
     }
 }
 
-function getLink(html) {
+function makeLinkNode(html) {
     document.createDocumentFragment();
     let div = document.createElement('div');
     div.innerHTML = html;
-    console.info(div.childNodes[0]);
-    return 'building';
+    return div.childNodes[0];
 }
 
-exports.findLinks = findLinks;
-exports.findBody = findBody;
+function saveLink(html) {
+    let linkNode = makeLinkNode(html);
+    linkNode.href = getAbsoluteURL(linkNode.href);
+    links.push(linkNode);
+}
+
+function getAbsoluteURL(href) {
+    let {hostname, protocol} = config;
+    if (href.indexOf('file://' + hostname + '/') === 0) {
+        return href.replace(/^file:/, protocol);
+    }
+    return href.replace(/^file:\/\//, `${protocol}//${hostname}`);
+}
+
+module.exports = {
+    findLinks,
+    findBody,
+    setConfig
+};

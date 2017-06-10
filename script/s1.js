@@ -1,5 +1,4 @@
-let initGetBaidu = require('./backend/socket').init;
-let {findLinks, findBody} = require('./script/linkParser');
+let initGetBaidu = require('./backend/logic').init;
 
 function initMenu() {
     const {ipcRenderer} = require('electron');
@@ -8,18 +7,16 @@ function initMenu() {
         console.log(message);
     });
 
-    initGetBaidu((content) => {
-        let bodyContent = findBody(content);
-        // console.info(bodyContent);
-        document.querySelector('#abc').textContent = bodyContent;
-        findLinks(content);
-        // console.info(html);
-        // if (!html.head || !html.body) {
-        //     return;
-        // }
-        // // console.info(html);
-        // document.head.innerHTML = html.head;
-        // document.body.innerHTML = html.body;
+    initGetBaidu((bodyContent, links) => {
+        document.body.innerHTML = bodyContent;
+        let fragment = document.createDocumentFragment();
+        links.forEach((link) => {
+            document.body.appendChild(link);
+            let p = document.createElement('p');
+            p.appendChild(link);
+            fragment.appendChild(p);
+        });
+        document.body.appendChild(fragment);
     });
 }
 
