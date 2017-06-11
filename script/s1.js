@@ -1,23 +1,44 @@
-let initGetBaidu = require('./backend/logic').init;
+const Vue = require('vue');
+const VueRouter = require('vue-router');
+const template = require('./s1.html');
+const {ipcRenderer} = require('electron');
+let initGetBaidu = require('../backend/logic').init;
 
-function initMenu() {
-    const {ipcRenderer} = require('electron');
+Vue.use(VueRouter);
 
-    ipcRenderer.on('msg', (event, message) => {
-        console.log(message);
-    });
-
-    initGetBaidu((bodyContent, links) => {
-        document.body.innerHTML = bodyContent;
-        let fragment = document.createDocumentFragment();
-        links.forEach((link) => {
-            document.body.appendChild(link);
-            let p = document.createElement('p');
-            p.appendChild(link);
-            fragment.appendChild(p);
+const App = Vue.extend({
+    template: template,
+    data: function() {
+        return {
+            content: '',
+            url: '',
+            links: [],
+            debug: false,
+        };
+    },
+    created: function() {
+        ipcRenderer.on('msg', (event, message) => {
+            console.log(message);
         });
-        document.body.appendChild(fragment);
-    });
-}
+    },
+    methods: {
+        search() {
+            if (!this.url) {
+                return alert('Please write down the url first!');
+            }
+            try {
+                initGetBaidu(this.url, (bodyContent, links) => {
+                    this.content = bodyContent;
+                    this.links = links;
+                });
+            } catch (e) {
+                alert('Fetch fail, maybe the URL is invalid, please check');
+            }
+        }
+    }
+});
 
-initMenu();
+new App({
+    el: '#page',
+    router: new VueRouter()
+});

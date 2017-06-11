@@ -25,7 +25,7 @@ function init(options, hook) {
             received += d;
         });
         res.on('end', () => {
-            console.info(received);
+            // console.info(received);
             hook && hook(received);
         });
     });

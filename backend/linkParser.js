@@ -39,6 +39,9 @@ function getLinksFromBody(body) {
             return STATUS.LEFT;
         }
         if (body.indexOf('</a>') === 0) {
+            if (currentStatus === STATUS.LEFT) { // fix empty text in <a> tag
+                return STATUS.CONTENT;
+            }
             return STATUS.RIGHT;
         }
         if (currentStatus === STATUS.LEFT) {
@@ -76,14 +79,14 @@ function getLinksFromBody(body) {
                 currentStatus = getStatus(body);
                 break;
             case STATUS.CONTENT:
-                result = body.match(/([\s\S]+?)((<a )|(<\/a>))/);
+                result = body.match(/([\s\S]*?)((<a )|(<\/a>))/);
                 if (!result) {
                     console.info(body);
                     console.info(stack);
                     throw new Error('parse error: should find content');
                 }
                 content = result[1];
-                if (!content) {
+                if (content == null) {
                     console.info(result);
                     throw new Error('Should find conent');
                 }
@@ -97,7 +100,11 @@ function getLinksFromBody(body) {
             case STATUS.RIGHT:
                 content = stack.shift();
                 left = stack.shift();
-                if (!content || !left) {
+                if (content == null || left == null) {
+                    console.info(links);
+                    // console.info(body);
+                    console.info(content);
+                    console.info(left);
                     throw new Error('Stack is empty');
                 }
                 let linkHTML = `${left.value}${content.value}</a>`;
