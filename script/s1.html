@@ -9,7 +9,7 @@
         </section>
         <ul>
             <li v-for="link in links">
-                <a href="link.href">{{link.text.trim() || '无文字'}}</a>
+                <a :href="link.href">{{link.text.trim() || '无文字'}}</a>
             </li>
         </ul>
     </div>

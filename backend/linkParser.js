@@ -1,4 +1,4 @@
-let links = [];
+let links;
 let config;
 
 function setConfig(_config = {}) {
@@ -10,6 +10,7 @@ function findBody(content) {
 }
 
 function findLinks(content) {
+    links = [];
     let html = getHTMLContent(content);
     getLinksFromBody(html.body);
     return links;
@@ -40,6 +41,9 @@ function getLinksFromBody(body) {
         }
         if (body.indexOf('</a>') === 0) {
             if (currentStatus === STATUS.LEFT) { // fix empty text in <a> tag
+                return STATUS.CONTENT;
+            }
+            if (currentStatus === STATUS.RIGHT) { // fix nested <a> tag
                 return STATUS.CONTENT;
             }
             return STATUS.RIGHT;

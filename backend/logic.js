@@ -16,7 +16,7 @@ function initOptions(url) {
     }
     let lowURL = url.toLowerCase();
     if (!/^https?:\/\//i.test(url)) {
-        throw new Error('URL must starts with http:// or https://');
+        url = `http://${url}`;
     }
     let reg = /^http(s)?:\/\/([^\/]+)(\/.*)?/i;
     let match = url.match(reg);

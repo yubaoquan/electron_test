@@ -30,6 +30,7 @@ const App = Vue.extend({
                 initGetBaidu(this.url, (bodyContent, links) => {
                     this.content = bodyContent;
                     this.links = links;
+                    console.info(links[0]);
                 });
             } catch (e) {
                 alert('Fetch fail, maybe the URL is invalid, please check');
