@@ -2,10 +2,18 @@ const {app, BrowserWindow} = require('electron');
 const path = require('path');
 const url = require('url');
 const initMenu = require('./menu').init;
+const {ipcMain} = require('electron');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
+function loadFile(src) {
+    win.loadURL(url.format({
+        pathname: path.join(__dirname, 'entry', src),
+        protocol: 'file:',
+        slashes: true
+    }));
+}
 
 function createWindow() {
     // Create the browser window.
@@ -14,12 +22,12 @@ function createWindow() {
         height: 600
     });
 
-    // and load the index.html of the app.
-    win.loadURL(url.format({
-        pathname: path.join(__dirname, 'index.html'),
-        protocol: 'file:',
-        slashes: true
-    }));
+    loadFile('index.html');
+
+    ipcMain.on('jump', (event, src) => {
+        console.info(src);
+        loadFile(src);
+    });
 
     // Open the DevTools.
     win.webContents.openDevTools();

@@ -2,19 +2,14 @@ const Vue = require('vue');
 const VueRouter = require('vue-router');
 const template = require('./s1.html');
 const {ipcRenderer} = require('electron');
-let initGetBaidu = require('../backend/logic').init;
+import MainComponent from '../vue/main.vue';
 
 Vue.use(VueRouter);
 
 const App = Vue.extend({
     template: template,
-    data: function() {
-        return {
-            content: '',
-            url: '',
-            links: [],
-            debug: false,
-        };
+    data() {
+        return {};
     },
     created: function() {
         ipcRenderer.on('msg', (event, message) => {
@@ -22,24 +17,24 @@ const App = Vue.extend({
         });
     },
     methods: {
-        search() {
-            if (!this.url) {
-                return alert('Please write down the url first!');
-            }
-            try {
-                initGetBaidu(this.url, (bodyContent, links) => {
-                    this.content = bodyContent;
-                    this.links = links;
-                    console.info(links[0]);
-                });
-            } catch (e) {
-                alert('Fetch fail, maybe the URL is invalid, please check');
-            }
+        go2SecondPage() {
+            console.info('go to second page');
+            ipcRenderer.send('jump', 'index2.html');
         }
     }
 });
 
 new App({
     el: '#page',
-    router: new VueRouter()
+    router: new VueRouter({
+        routes: [{
+            path: '/main',
+            component: MainComponent
+        }, {
+            path: '/foo',
+            component: {
+                template: '<div>fooooooooooooo</div>'
+            }
+        }]
+    })
 });

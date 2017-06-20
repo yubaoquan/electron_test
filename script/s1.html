@@ -1,17 +1,10 @@
 <div>
     <div>
-        <div>
-            <input type="text" v-model="url" @keyup.enter="search">
-            <button type="button" name="button" v-on:click="search">Go</button>
-        </div>
         <section>
-            <button type="button" v-on:click="debug = true">show debug info</button>
+            <a href="javascript:;" @click="go2SecondPage">Page2</a>
+            <router-link to="/main">Main</router-link>
+            <router-link to="/foo">foo</router-link>
         </section>
-        <ul>
-            <li v-for="link in links">
-                <a :href="link.href">{{link.text.trim() || '无文字'}}</a>
-            </li>
-        </ul>
+        <router-view></router-view>
     </div>
-    <div v-if="debug">{{content}}</div>
 </div>
