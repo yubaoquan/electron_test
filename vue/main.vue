@@ -2,6 +2,7 @@
 </style>
 <template lang="html">
     <div class="">
+        <h1>Please input the web page address you want to fetch.</h1>
         <section>
             <input type="text" v-model="url" @keyup.enter="search">
             <button type="button" name="button" v-on:click="search">Go</button>

@@ -37,8 +37,8 @@ function showLink(link) {
     console.info(link);
     console.info(link.href);
     console.info(link.innerHTML);
-
 }
+
 module.exports.init = function(url, cb) {
     initOptions(url);
     request.init(options, (received) => {

@@ -1,10 +1,12 @@
-<div>
-    <div>
-        <section>
+<div class="page-root">
+    <div class="page-root__container">
+        <section class="links">
             <a href="javascript:;" @click="go2SecondPage">Page2</a>
-            <router-link to="/main">Main</router-link>
-            <router-link to="/foo">foo</router-link>
+            <router-link class="link" to="/main">Link Spider</router-link>
+            <router-link class="link" to="/saying">Saying generator</router-link>
         </section>
-        <router-view></router-view>
+        <section class="main">
+            <router-view></router-view>
+        </section>
     </div>
 </div>

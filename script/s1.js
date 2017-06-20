@@ -2,7 +2,11 @@ const Vue = require('vue');
 const VueRouter = require('vue-router');
 const template = require('./s1.html');
 const {ipcRenderer} = require('electron');
-import MainComponent from '../vue/main.vue';
+
+import MainComponent from 'vueDir/main.vue';
+import Saying from 'vueDir/saying.vue';
+import resetStyle from '../stylesheet/reset.css';
+import style from './s1.less';
 
 Vue.use(VueRouter);
 
@@ -31,10 +35,8 @@ new App({
             path: '/main',
             component: MainComponent
         }, {
-            path: '/foo',
-            component: {
-                template: '<div>fooooooooooooo</div>'
-            }
+            path: '/saying',
+            component: Saying
         }]
     })
 });
