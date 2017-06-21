@@ -1,8 +1,6 @@
-// import iconv from 'iconv-lite';
-const iconv = require('iconv-lite');
-//
-const https = require('https');
-const http = require('http');
+import iconv from 'iconv-lite';
+import https from 'https';
+import http from 'http';
 
 let client;
 
@@ -23,15 +21,13 @@ function init(options, hook) {
     initClient(options);
 
     const req = client.request(options, (res) => {
-        let received = '';
+        let buffer = Buffer.alloc(0);
         res.on('data', (d) => {
-            received += d;
+            buffer = Buffer.concat([buffer, d]);
         });
         res.on('end', () => {
-            // console.info(received);
-            const decoded = iconv.decode(Buffer.from(received), 'gb2312');
-            console.info('decoded gb2312---->', decoded);
-            hook && hook(received);
+            const decoded = iconv.decode(buffer, options.encoding);
+            hook && hook(decoded);
         });
     });
 

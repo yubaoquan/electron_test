@@ -23,7 +23,10 @@ const SAYING_SITE_URL = 'http://www.geyanw.com/';
 export default {
     created() {
         try {
-            getSayingLinks(SAYING_SITE_URL, (bodyContent, links) => {
+            getSayingLinks({
+                url: SAYING_SITE_URL,
+                encoding: 'gb2312'
+            }, (bodyContent, links) => {
                 this.links = links;
                 console.info(links[0]);
             });

@@ -10,7 +10,7 @@ let options = {
     protocol: 'http:'
 };
 
-function initOptions(url) {
+function initOptions({url, encoding}) {
     if (!url) {
         throw new Error('No url');
     }
@@ -29,6 +29,7 @@ function initOptions(url) {
     }
     options.hostname = match[2];
     options.path = match[3] || '/';
+    options.encoding = encoding;
     parser.setConfig(options);
 }
 
@@ -39,8 +40,11 @@ function showLink(link) {
     console.info(link.innerHTML);
 }
 
-module.exports.init = function(url, cb) {
-    initOptions(url);
+module.exports.init = function({url, encoding = 'utf8'}, cb) {
+    initOptions({
+        url,
+        encoding
+    });
     request.init(options, (received) => {
         let links = [];
         try {

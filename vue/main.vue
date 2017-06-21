@@ -42,7 +42,9 @@ export default {
                 return alert('Please write down the url first!');
             }
             try {
-                initGetBaidu(this.url, (bodyContent, links) => {
+                initGetBaidu({
+                    url: this.url
+                }, (bodyContent, links) => {
                     this.content = bodyContent;
                     this.links = links;
                     console.info(links[0]);
