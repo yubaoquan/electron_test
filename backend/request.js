@@ -1,11 +1,13 @@
 import iconv from 'iconv-lite';
 import https from 'https';
 import http from 'http';
+import initOptions from './requestOptionGenerator';
 
 let client;
 
 function initClient(options) {
-    switch (options.protocol) {
+    const protocol = options.protocol || 'http:';
+    switch (protocol) {
         case 'http:':
             client = http;
             break;
@@ -13,11 +15,12 @@ function initClient(options) {
             client = https;
             break;
         default:
-            throw new Error('Invalid protocol:' + options.protocol);
+            throw new Error('Invalid protocol:' + protocol);
     }
 }
 
 function init(options, hook) {
+    console.info(options);
     initClient(options);
 
     const req = client.request(options, (res) => {
@@ -37,4 +40,8 @@ function init(options, hook) {
     req.end();
 }
 
-exports.init = init;
+function simpleInit(options, hook) {
+    return init(initOptions(options), hook);
+}
+
+export { init, simpleInit };
