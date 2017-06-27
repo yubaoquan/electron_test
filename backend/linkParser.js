@@ -11,14 +11,14 @@ function findBody(content) {
 
 function findLinks(content) {
     links = [];
-    let html = getHTMLContent(content);
+    const html = getHTMLContent(content);
     getLinksFromBody(html.body);
     return links;
 }
 
 function getHTMLContent(html) {
-    let contentReg = /<head>([\s\S]*)<\/head>([\s\n]*)<body[^>]*>([\s\S]*)<\/body>/i;
-    let matchResult = html.match(contentReg);
+    const contentReg = /<head>([\s\S]*)<\/head>([\s\n]*)<body[^>]*>([\s\S]*)<\/body>/i;
+    const matchResult = html.match(contentReg);
     return {
         head: matchResult[1],
         body: matchResult[3]
@@ -26,7 +26,7 @@ function getHTMLContent(html) {
 }
 
 function getLinksFromBody(body) {
-    let stack = [];
+    const stack = [];
     const STATUS = {
         INIT: 0,
         LEFT: 1,
@@ -111,7 +111,7 @@ function getLinksFromBody(body) {
                     console.info(left);
                     throw new Error('Stack is empty');
                 }
-                let linkHTML = `${left.value}${content.value}</a>`;
+                const linkHTML = `${left.value}${content.value}</a>`;
                 saveLink(linkHTML);
                 body = body.slice('</a>'.length);
                 currentStatus = getStatus(body);
@@ -123,19 +123,19 @@ function getLinksFromBody(body) {
 
 function makeLinkNode(html) {
     document.createDocumentFragment();
-    let div = document.createElement('div');
+    const div = document.createElement('div');
     div.innerHTML = html;
     return div.childNodes[0];
 }
 
 function saveLink(html) {
-    let linkNode = makeLinkNode(html);
+    const linkNode = makeLinkNode(html);
     linkNode.href = getAbsoluteURL(linkNode.href);
     links.push(linkNode);
 }
 
 function getAbsoluteURL(href) {
-    let {hostname, protocol} = config;
+    const { hostname, protocol } = config;
     if (href.indexOf('file://' + hostname + '/') === 0) {
         return href.replace(/^file:/, protocol);
     }

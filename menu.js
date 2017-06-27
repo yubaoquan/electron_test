@@ -1,28 +1,43 @@
-const {app, Menu} = require('electron');
+import { app, Menu, ipcMain } from 'electron';
 
 function initTemplate(win) {
     const template = [{
-        label: "Edit",
+        label: 'Edit',
         submenu: [
-            { label: "Undo", accelerator: "CmdOrCtrl+Z", selector: "undo:" },
-            { label: "Redo", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:" },
-            { type: "separator" },
-            { label: "Cut", accelerator: "CmdOrCtrl+X", selector: "cut:" },
-            { label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:" },
-            { label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:" },
-            { label: "Select All", accelerator: "CmdOrCtrl+A", selector: "selectAll:" }
+            { label: 'Undo', accelerator: 'CmdOrCtrl+Z', selector: 'undo:' },
+            { label: 'Redo', accelerator: 'Shift+CmdOrCtrl+Z', selector: 'redo:' },
+            { type: 'separator' },
+            { label: 'Cut', accelerator: 'CmdOrCtrl+X', selector: 'cut:' },
+            { label: 'Copy', accelerator: 'CmdOrCtrl+C', selector: 'copy:' },
+            { label: 'Paste', accelerator: 'CmdOrCtrl+V', selector: 'paste:' },
+            { label: 'Select All', accelerator: 'CmdOrCtrl+A', selector: 'selectAll:' }
         ]
     }, {
         label: 'View',
         submenu: [
-          {role: 'forcereload'},
-          {role: 'toggledevtools'},
-          {type: 'separator'},
-          {role: 'resetzoom'},
-          {role: 'zoomin'},
-          {role: 'zoomout'},
-          {type: 'separator'},
-          {role: 'togglefullscreen'}
+            { role: 'forcereload' },
+            { role: 'toggledevtools' },
+            { type: 'separator' },
+            { role: 'resetzoom' },
+            { role: 'zoomin' },
+            { role: 'zoomout' },
+            { type: 'separator' },
+            { role: 'togglefullscreen' },
+            { type: 'separator' },
+            {
+                label: 'Forward',
+                accelerator: 'CmdOrCtrl+]',
+                click() {
+                    win.webContents.send('forward');
+                }
+            },
+            {
+                label: 'Back',
+                accelerator: 'CmdOrCtrl+[',
+                click() {
+                    win.webContents.send('back');
+                }
+            },
         ]
     }, {
         label: 'Operation',
@@ -43,15 +58,15 @@ function initTemplate(win) {
         template.unshift({
             label: app.getName(),
             submenu: [
-                {role: 'about'},
-                {type: 'separator'},
-                {role: 'services', submenu: []},
-                {type: 'separator'},
-                {role: 'hide'},
-                {role: 'hideothers'},
-                {role: 'unhide'},
-                {type: 'separator'},
-                {role: 'quit'}
+                { role: 'about' },
+                { type: 'separator' },
+                { role: 'services', submenu: [] },
+                { type: 'separator' },
+                { role: 'hide' },
+                { role: 'hideothers' },
+                { role: 'unhide' },
+                { type: 'separator' },
+                { role: 'quit' }
             ]
         });
     }
@@ -64,6 +79,6 @@ function reloadProject() {
 }
 
 exports.init = function(win) {
-    let menu = initTemplate(win);
+    const menu = initTemplate(win);
     Menu.setApplicationMenu(menu);
 };

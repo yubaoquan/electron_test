@@ -1,8 +1,13 @@
-const {app, BrowserWindow} = require('electron');
+require('babel-register')({
+    presets: ['env']
+});
+require('babel-polyfill');
+
+const { app, BrowserWindow } = require('electron');
 const path = require('path');
 const url = require('url');
 const initMenu = require('./menu').init;
-const {ipcMain} = require('electron');
+const { ipcMain } = require('electron');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.

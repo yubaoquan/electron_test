@@ -3,6 +3,7 @@
         ecmaVersion: 8,
         sourceType: module,
         ecmaFeatures: {
+            experimentalObjectRestSpread: true
         }
     },
     env: {
@@ -57,7 +58,9 @@
         //禁止函数调用时括号左边有空格
         func-call-spacing: [error, never],
         //关键字前后必须有空格, (function后必须无空格)
-        keyword-spacing: [error, { before: true, after: true }],
+        keyword-spacing: [error,
+            { before: true, after: true }
+        ],
         //对象名值对的冒号前禁止有空格, 冒号后必须有空格
         key-spacing: [error, {
             beforeColon: false,
@@ -129,6 +132,46 @@
         // 花括号前加空格
         space-before-blocks: error,
         // 禁止使用未声明的变量
-        no-undef: 2
+        no-undef: 2,
+        arrow-spacing: error,
+        // 回调使用箭头函数
+        prefer-arrow-callback: [error, {
+            allowUnboundThis: false,
+            allowNamedFunctions: true
+        }],
+        // let和const优先使用const
+        prefer-const: error,
+        // 注释双斜杠后加一个空格, ----和++++例外
+        spaced-comment: [error, always, {
+            exceptions: ["-", "+"]
+        }],
+        // 代码块花括号内不允许有空行
+        padded-blocks: [error, never],
+        // 要求花括号内有空格 (除了 {})
+        object-curly-spacing: [error, always],
+        // 一行最大长度
+        max-len: [error, 100, {
+            ignoreComments: true,
+            ignoreUrls: true,
+            ignoreStrings: true,
+            ignoreTemplateLiterals: true,
+            ignoreRegExpLiterals: true
+        }],
+        // 要求中缀操作符周围有空格 a + b
+        space-infix-ops: error,
+        // 避免使用不必要的字符串拼接 var a = '1' + '0';
+        no-useless-concat: 2,
+        // 多行字符串要相加，而不是用链接符
+        no-multi-str: 1,
+        // 字符串使用单引号
+        quotes: [2, single, { allowTemplateLiterals: true }],
+        // 禁止同名导入/导出
+        // import { foo as foo } from "bar";
+        // export { foo as foo };
+        no-useless-rename: [error, {
+            ignoreDestructuring: false,
+            ignoreImport: false,
+            ignoreExport: false
+        }]
     }
 }

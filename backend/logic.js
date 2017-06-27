@@ -1,8 +1,8 @@
-let parser = require('./linkParser');
-let {findLinks, findBody} = parser;
-let request = require('./request');
+const parser = require('./linkParser');
+const { findLinks, findBody } = parser;
+const request = require('./request');
 
-let options = {
+const options = {
     hostname: 'news.baidu.com',
     port: 80,
     path: '/',
@@ -10,16 +10,16 @@ let options = {
     protocol: 'http:'
 };
 
-function initOptions({url, encoding}) {
+function initOptions({ url, encoding }) {
     if (!url) {
         throw new Error('No url');
     }
-    let lowURL = url.toLowerCase();
+    const lowURL = url.toLowerCase();
     if (!/^https?:\/\//i.test(url)) {
         url = `http://${url}`;
     }
-    let reg = /^http(s)?:\/\/([^\/]+)(\/.*)?/i;
-    let match = url.match(reg);
+    const reg = /^http(s)?:\/\/([^\/]+)(\/.*)?/i;
+    const match = url.match(reg);
     if (lowURL.indexOf('https') === 0) {
         options.protocol = 'https:';
         options.port = 443;
@@ -40,7 +40,7 @@ function showLink(link) {
     console.info(link.innerHTML);
 }
 
-module.exports.init = function({url, encoding = 'utf8'}, cb) {
+module.exports.init = function({ url, encoding = 'utf8' }, cb) {
     initOptions({
         url,
         encoding
@@ -53,7 +53,7 @@ module.exports.init = function({url, encoding = 'utf8'}, cb) {
             console.error(e);
             links = [];
         }
-        let bodyContent = findBody(received);
+        const bodyContent = findBody(received);
         cb && cb(bodyContent, links);
         links && links.length && showLink(links[0]);
     });

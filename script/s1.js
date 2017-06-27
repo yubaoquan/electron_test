@@ -16,9 +16,8 @@ const App = Vue.extend({
         return {};
     },
     created: function() {
-        ipcRenderer.on('msg', (event, message) => {
-            console.log(message);
-        });
+        ipcRenderer.on('forward', window.history.forward);
+        ipcRenderer.on('back', window.history.back);
     },
     methods: {
         go2SecondPage() {

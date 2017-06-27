@@ -4,9 +4,10 @@
     "main": "main.js",
     "scripts": {
         "s": "./node_modules/.bin/electron .",
-        "wbpk": "webpack --watch-stdin --progress"
+        "w": "webpack --watch-stdin --progress"
     },
     "dependencies": {
+        "babel-polyfill": "^6.23.0",
         "iconv-lite": "^0.4.18",
         "vue": "^2.3.3",
         "vue-hot-reload-api": "^1.3.3",
