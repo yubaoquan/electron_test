@@ -7,6 +7,7 @@
         "w": "webpack --watch-stdin --progress"
     },
     "dependencies": {
+        "axios": "^0.16.2",
         "babel-polyfill": "^6.23.0",
         "iconv-lite": "^0.4.18",
         "vue": "^2.3.3",

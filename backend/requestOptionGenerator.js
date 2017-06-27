@@ -25,7 +25,8 @@ function initOptions({ url, encoding }) {
     }
     options.hostname = match[2];
     options.path = match[3] || '/';
-    options.encoding = encoding;
+    options.encoding = encoding || 'utf8';
+    // console.info(options);
     return options;
 }
 

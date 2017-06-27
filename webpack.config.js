@@ -5,6 +5,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 module.exports = {
     entry: {
         vue: 'vue',
+        axios: 'axios',
         VueRouter: 'vue-router',
         main: './script/s1',
     },
@@ -57,7 +58,7 @@ module.exports = {
     },
     plugins: [
         new webpack.optimize.CommonsChunkPlugin({
-            names: ['vue', 'VueRouter', 'manifest']
+            names: ['vue', 'VueRouter', 'axios', 'manifest']
         }),
         new ExtractTextPlugin('./stylesheet/main.css')
     ]

@@ -6,7 +6,7 @@
     padding: 5px;
 }
 .saying-generator__random-button-wrapper button {
-    width: 100px;
+    width: 110px;
     height: 40px;
     font-size: 14px;
     padding: 5px;
@@ -22,14 +22,19 @@
 .saying-generator__item--hidden {
     display: none;
 }
+.saying-generator__img {
+    width: 200px;
+    height: 200px
+}
 </style>
 
 <template lang="html">
     <div class="saying-generator">
         <h1>Saying generator</h1>
-        <div>
+        <section>
             <div class="saying-generator__random-button-wrapper">
-                <button @click="pickOneLink">random</button>
+                <button @click="pickOneLink">random saying</button>
+                <button @click="getRandomImg">random img</button>
             </div>
             <p class="saying-generator__saying">{{saying}}</p>
             <p
@@ -37,15 +42,28 @@
             >
                 <a :href="selected.href">{{selected.text | trim}}</a>
             </p>
-        </div>
-        <div class="saying-generator__links saying-generator__item--hidden">
+        </section>
+        <section class="saying-generator__links saying-generator__item--hidden">
             <ul>
                 <li v-for="link in links" class="saying-generator__link">
                     <a :href="link.href">{{link.text | trim}}</a>
                 </li>
             </ul>
-        </div>
-        <div v-html="sayingPageContent" class="test-place saying-generator__item--hidden"></div>
+        </section>
+        <section
+            v-html="sayingPageContent"
+            class="test-place saying-generator__item--hidden"
+        ></section>
+        <section
+            v-html="imgPageContent"
+            class="test-place2"
+        ></section>
+        <section class="saying-generator__random-img" v-if="randomImg">
+            <img :src="randomImg" alt="图片">
+        </section>
+        <section>
+            <img class="saying-generator__img" :src="img" v-for="img in imgs"/>
+        </section>
     </div>
 </template>
 
@@ -55,7 +73,9 @@ import VueRouter from 'vue-router';
 import { init as getSayingLinks } from '../backend/logic';
 import { simpleInit as request } from '../backend/request';
 import { random, trim, nodeList2Array, removeNode } from '../util/util';
+import decodeBaiduURL from '../util/baiduURLDecoder';
 const SAYING_SITE_URL = 'http://www.geyanw.com/';
+import axios from 'axios';
 
 export default {
     created() {
@@ -77,8 +97,11 @@ export default {
             links: [],
             selected: {},
             sayingPageContent: '',
+            imgPageContent: '',
             sayings: [],
-            saying: ''
+            saying: '',
+            randomImg: '',
+            imgs: []
         };
     },
     methods: {
@@ -118,7 +141,33 @@ export default {
         pickRandomSaying() {
             const saying = this.sayings[random(0, this.sayings.length)];
             this.saying = saying.replace(/^\d+、/, '');
-        }
+        },
+        async getRandomImg() {
+            try {
+                const params = {
+                    tn: 'resultjson_com',
+                    ipn: 'rj',
+                    ct: 201326592,
+                    fp: 'result',
+                    queryWord: '星空',
+                    ie: 'utf-8',
+                    oe: 'utf-8',
+                    word: '星空',
+                    pn: 0,
+                    rn: 60
+                };
+                const resp = await axios.get('https://image.baidu.com/search/acjson', {
+                    params
+                });
+                console.info(resp);
+
+                this.imgs = resp.data.data
+                    .filter(item => item.objURL)
+                    .map(item => decodeBaiduURL(item.objURL));
+            } catch (e) {
+                console.error(e);
+            }
+        },
     },
     filters: {
         trim(val) {
