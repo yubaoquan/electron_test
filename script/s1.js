@@ -1,7 +1,7 @@
 const Vue = require('vue');
 const VueRouter = require('vue-router');
 const template = require('./s1.html');
-const {ipcRenderer} = require('electron');
+const { ipcRenderer } = require('electron');
 
 import MainComponent from 'vueDir/main.vue';
 import Saying from 'vueDir/saying.vue';
