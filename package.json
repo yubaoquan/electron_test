@@ -4,7 +4,8 @@
     "main": "main.js",
     "scripts": {
         "s": "./node_modules/.bin/electron .",
-        "w": "webpack --watch-stdin --progress"
+        "w": "webpack --watch-stdin --progress",
+        "forever": "node forever.js"
     },
     "dependencies": {
         "axios": "^0.16.2",
@@ -26,6 +27,7 @@
         "css-loader": "^0.24.0",
         "electron": "^1.6.10",
         "extract-text-webpack-plugin": "^2.1.2",
+        "forever-monitor": "^1.7.1",
         "less": "^2.7.2",
         "less-loader": "^4.0.4",
         "postcss-loader": "^2.0.6",

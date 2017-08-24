@@ -172,6 +172,7 @@
             ignoreDestructuring: false,
             ignoreImport: false,
             ignoreExport: false
-        }]
+        }],
+        no-multi-spaces: error,
     }
 }
